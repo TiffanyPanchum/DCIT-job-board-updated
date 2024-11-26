@@ -2,6 +2,7 @@ import click, pytest, sys
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup
 
+from App.controllers.company import get_company_by_name
 from App.database import db, get_migrate
 from App.main import create_app
 from App.controllers import ( create_user, get_all_users_json, get_all_users, get_all_admins, get_all_admins_json,
@@ -11,6 +12,7 @@ from App.controllers import ( create_user, get_all_users_json, get_all_users, ge
      is_alumni_subscribed, send_notification, apply_listing, get_all_applicants,
      get_user_by_username, get_user, get_listing, delete_listing, subscribe, unsubscribe,
      login)
+from App.views.alumni import subscribe_action
 
 # This commands file allow you to create convenient CLI commands for testing controllers
 
@@ -57,7 +59,7 @@ def initialize():
     # add in companies
     add_company('company1', 'company1', 'compass', 'company@mail',  'company_address', 'contact', 'company_website.com')
     add_company('company2', 'company2', 'compass', 'company@mail2',  'company_address2', 'contact2', 'company_website2.com')
-
+    add_company('company3', 'company3', 'compass', 'company@mail3',  'company_address3', 'contact3', 'company_website3.com')
     # add in listings
     # listing1 = add_listing('listing1', 'job description', 'company2')
     # print(listing1, 'test')
@@ -72,9 +74,11 @@ def initialize():
 
     # print(get_all_listings_json())
     print(get_company_listings('company2'))
+    print(get_company_by_name('company3'))
     
 
     print(get_all_subscribed_alumni())
+
     # send_notification(['Programming'])
     # create_user('username', 'password', 'email')
     # print(get_user_by_username('rob'))

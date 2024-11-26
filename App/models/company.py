@@ -1,24 +1,29 @@
 from App.database import db
+from .observer import Observer
 from .user import User
 
-class Company(User):
+class Company(Observer):
+    __tablename__='company'
     # id = db.Column(db.Integer, primary_key = True)
     # id = db.Column(db.Integer)
+    id = db.Column(db.Integer, db.ForeignKey('observer.id'), primary_key=True)
 
     # company_name = db.Column(db.String, primary_key = True)
-    company_name = db.Column(db.String, unique=True, nullable=False)
+    company_name = db.Column(db.String(120), unique=True, nullable=False)
 
     # insert other company information here later
     # hrname = db.Column(db.String(120))
     # hremail = db.column(db.String(120))
     company_address = db.Column(db.String(120))
 
-    contact = db.Column(db.String())
+    contact = db.Column(db.String(120))
 
     company_website = db.Column(db.String(120))
 
 
-
+    __mapper_args__ = {
+        'polymorphic_identity': 'company',  # Unique identity for Company
+    }
      
 
     # set up relationship with Listing object (1-M)
@@ -29,11 +34,12 @@ class Company(User):
     # applicants = db.relationship('Alumni', backref='company', lazy=True)
 
     def __init__(self, username, company_name, password, email, company_address, contact, company_website):
-        super().__init__(username, password, email)
+        super().__init__(username, password, email, company_name, company_address, contact, company_website)
         self.company_name = company_name
         self.company_address = company_address
         self.contact = contact
         self.company_website = company_website
+
         
     def get_json(self):
         return{
@@ -47,4 +53,7 @@ class Company(User):
     
     def get_name(self):
         return self.company_name
+    
+    def update(self, message):
+        print(f"Company {self.company_name} received notification: {message}")
     
