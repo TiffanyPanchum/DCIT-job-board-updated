@@ -9,9 +9,9 @@ def add_company(username, company_name, password, email, company_address, contac
         if (
             Alumni.query.filter_by(username=username).first() is not None or
             Admin.query.filter_by(username=username).first() is not None or
-            # Company.query.filter_by(username=username).first() is not None or
+            Company.query.filter_by(username=username).first() is not None or
 
-            # Company.query.filter_by(email=email).first() is not None or
+            Company.query.filter_by(email=email).first() is not None or
             Admin.query.filter_by(email=email).first() is not None or
             Alumni.query.filter_by(email=email).first() is not None
             
@@ -19,13 +19,16 @@ def add_company(username, company_name, password, email, company_address, contac
             return None  # Return None to indicate duplicates
 
         newCompany= Company(username,company_name, password, email, company_address, contact, company_website)
-        try: # safetey measure for trying to add duplicate 
-            db.session.add(newCompany)
-            db.session.commit()  # Commit to save the new  to the database
-            return newCompany
-        except:
-            db.session.rollback()
-            return None
+        db.session.add(newCompany)
+        db.session.commit()  # Commit to save the new  to the database
+        return newCompany
+        #try: # safety measure for trying to add duplicate 
+        #    db.session.add(newCompany)
+        #    db.session.commit()  # Commit to save the new  to the database
+        #    return newCompany
+        #except:
+        #    db.session.rollback()
+        #    return None
 
 def send_notification(job_categories=None):
     # get all the subscribed users who have the job categories
@@ -87,7 +90,9 @@ def get_company_by_name(company_name):
 def get_company_listings(company_name):
     # return Listing.query.filter_by(company_name=company_name)
     company = get_company_by_name(company_name)
-    
+    if not company:
+        print(f"no company found with the name '{company_name}'")
+        return None
     # for listing in company.listings:
     #     print(listing.get_json())
     return company.listings

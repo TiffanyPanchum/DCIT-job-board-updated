@@ -33,10 +33,10 @@ class Company(User, Observer):
     def __init__(self, username, company_name, password, company_email, company_address, contact, company_website):
         User.__init__(self, username, password, company_email)
         Observer.__init__(self, company_name, company_address, contact, company_website)
-        #self.company_name = company_name
-        #self.company_address = company_address
-        #self.contact = contact
-        #self.company_website = company_website
+        self.company_name = company_name
+        self.company_address = company_address
+        self.contact = contact
+        self.company_website = company_website
         
     def get_json(self):
         return{
