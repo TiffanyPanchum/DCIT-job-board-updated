@@ -1,6 +1,7 @@
 from App.database import db
 from .user import User
 from .observer import Observer
+from .notification import Notification
 
 class Company(User, Observer):
     __tablename__="company"
@@ -25,6 +26,9 @@ class Company(User, Observer):
 
     # set up relationship with Listing object (1-M)
     listings = db.relationship('Listing', backref='company', lazy=True)
+
+    #setup relationship with notifications
+    notification = db.relationship('Notification', backref="company", lazy=True)
 
     # maybe relationship with alumni? list of alumni as subscribers?
     # applicants?
@@ -53,3 +57,6 @@ class Company(User, Observer):
     
     def update(self, message):
         print(f"Notification to {self.username}: {message}")
+        self.notification.append(Notification(message))
+        db.session.add(self)
+        db.session.commit()
