@@ -154,3 +154,15 @@ class Listing(db.Model):
             'desiredcandidate':self.desiredcandidate,
             'area':self.area,
         }
+    
+    def attach(self, company_name):
+        if company_name not in self.companies:
+            self.companies.append(company_name)
+    
+    def detach(self, company_name):
+        if company_name in self.companies:
+            self.companies.remove(company_name)
+    
+    def notify(self, message):
+        for company_name in self.companies:
+            company_name.update(message)
