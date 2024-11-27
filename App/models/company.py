@@ -1,8 +1,10 @@
 from App.database import db
 from .user import User
+from .observer import Observer
 
-class Company(User):
-    # id = db.Column(db.Integer, primary_key = True)
+class Company(User, Observer):
+    __tablename__="company"
+    id = db.Column(db.Integer, primary_key = True)
     # id = db.Column(db.Integer)
 
     # company_name = db.Column(db.String, primary_key = True)
@@ -17,9 +19,9 @@ class Company(User):
 
     company_website = db.Column(db.String(120))
 
-
-
-     
+    __mapper_args__ = {
+        'polymorphic_identity': 'company',  # Unique identity for Company
+    }
 
     # set up relationship with Listing object (1-M)
     listings = db.relationship('Listing', backref='company', lazy=True)
@@ -28,12 +30,13 @@ class Company(User):
     # applicants?
     # applicants = db.relationship('Alumni', backref='company', lazy=True)
 
-    def __init__(self, username, company_name, password, email, company_address, contact, company_website):
-        super().__init__(username, password, email)
-        self.company_name = company_name
-        self.company_address = company_address
-        self.contact = contact
-        self.company_website = company_website
+    def __init__(self, username, company_name, password, company_email, company_address, contact, company_website):
+        User.__init__(self, username, password, company_email)
+        Observer.__init__(self, company_name, company_address, contact, company_website)
+        #self.company_name = company_name
+        #self.company_address = company_address
+        #self.contact = contact
+        #self.company_website = company_website
         
     def get_json(self):
         return{
@@ -48,3 +51,5 @@ class Company(User):
     def get_name(self):
         return self.company_name
     
+    def update(self, message):
+        print(f"Notification to {self.username}: {message}")

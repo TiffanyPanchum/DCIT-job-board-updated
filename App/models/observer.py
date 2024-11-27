@@ -1,12 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declared_attr
 from App.database import db
-from .user import User
-#from app import app
+
 db = SQLAlchemy()
 
-class Observer(User):
-    __tablename__ = 'observer'
+class Observer(db.Model):
+    __abstract__=True
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     address = db.Column(db.String(120))
@@ -23,13 +23,8 @@ class Observer(User):
             'polymorphic_on':cls.type
         }
 
-    #subjects = db.relationship('Subject', backref='observer', lazy=True)
-    #subject_id=db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
-    #type = db.Column(db.String(50))
-    #state=db.relationship('State', backref="observer", lazy=True)
-
-    def __init__(self, username, password, email, name, address, o_contact, website):
-        super().__init__(username, password, email)
+    def __init__(self, name, address, o_contact, website):
+        
         self.name = name
         self.address = address
         self.o_contact = o_contact
