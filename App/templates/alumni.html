@@ -235,13 +235,24 @@
             position: relative;
         }
         .popup-form{
-            position: fixed;
+            /* position: fixed;
             top: 0;
             margin-left: 10px;
             width: 50%;
             height: 50%;
             background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999; */
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.5); /* Background overlay */
             z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            width: 100%; /* Ensure it takes full width */
+            height: 100%; /* Ensure it takes full height */
         }
         .close-btn {
             color: black;
@@ -421,10 +432,10 @@
                             <!-- Add a hidden input field to store the job ID -->
                             <input type="hidden" name="job_id" value="{{ job.id }}">
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                             <label for="full_name">Full Name:</label>
                             <input type="text" id="full_name" name="full_name" required>
-                        </div>
+                        </div> -->
                         <div class="form-group" id="form-dropdown">
                             <label for="experience">Experience:</label>
                             <select id="experience" name="experience" required>
@@ -434,14 +445,14 @@
                                 <option value="senior">Senior Level</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="email">Email:</label>
                             <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
                             <input type="tel" id="phone" name="phone" required>
-                        </div>
+                        </div> -->
                         <!-- <div class="form-group">
                             <label for="resume">Resume (PDF):</label>
                             <input type="file" id="resume" name="resume" accept=".pdf" required>
@@ -504,9 +515,16 @@
 
     // Function to toggle form popup visibility
     function toggleFormPopup(popupId) {
-        const formPopup = document.getElementById(popupId);
-        formPopup.classList.toggle('hidden'); // Toggle the 'hidden' class
+    const popup = document.getElementById(popupId);
+    if (popup.classList.contains("hidden")) {
+        popup.classList.remove("hidden");
+        popup.style.display = "flex"; // Ensures flex behavior for centering
+    } else {
+        popup.classList.add("hidden");
+        popup.style.display = "none"; // Hides the popup
     }
+}
+
 });
 
 
